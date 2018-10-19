@@ -15,6 +15,7 @@ import {
   ListItemIcon,
   ListItemText,
   Card,
+  Grid,
  } from '@material-ui/core/'
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
@@ -103,33 +104,30 @@ const styles = theme => {
     },
     appBarSpacer: {
       ...theme.mixins.toolbar,
-      width: '100%',
+      gridColumn: '1/3',
+      gridRow: '1/2',
     },
     content: {
+//      ...styleMapper(theme.mixins.toolbar, 'minHeight', (r, v) => {
+//        r['marginTop'] = `${v}px`
+//        r['height'] = `calc(100vh - ${v}px - 2rem)`
+//      }),
+      display: 'grid',
+      gridTemplateColumns: 'min-content max-content',
+      gridTemplateRows: 'auto auto',
       ...styleMapper(theme.mixins.toolbar, 'minHeight', (r, v) => {
-        r['marginTop'] = `${v}px`
-        r['height'] = `calc(100vh - ${v}px - 2rem)`
+        r['gridTemplateRows'] = `${v}px auto`
+      //  r['maxHeight'] = `calc(100vh - ${v}px)`
+      //  r['height'] = `calc(100vh - ${v}px)`
       }),
-      display: 'flex',
-      flex: '1 1 auto',
-      flexFlow: 'column',
-      //alignItems: 'baseline',
-      padding: theme.spacing.unit * 3,
-    //  border: '4px solid black',
-      overflow: 'auto',
-    },
-    contentH: {
-      flex: '1 1 auto',
-      //width: '100%',
-      //overflowX: 'visible',
-      //overflowY: 'hidden',
-      //border: '4px solid green',
-      //zIndex: 5000,
-      display: 'flex',
-      alignItems: 'center',
-      alignContent: 'center',
-      //display: 'inline-block',
-      //flexFlow: 'row',
+      //gridTemplateRows: `${theme.mixins.toolbar.minHeight}px auto`,
+      height: 'calc(100vh - 2rem)',
+      maxHeight: 'calc(100vh - 2rem)',
+      //gridGap: theme.spacing.unit * 3,
+      //padding: theme.spacing.unit * 3,
+      minWidth: '100%',
+      //  border: '4px solid black',
+      //height: '100%',
     },
     drawerHeadingSpacer: {
       width: '24px',
@@ -166,6 +164,12 @@ width: '100%',
     spacer: {
       flex: '1 1 auto',
       height: '100%',
+    },
+    grid: {
+      gridRow: '2/3',
+      gridColumn: '2/3',
+      height: '100%',
+      width: '100%',
     }
   })
 }
@@ -245,10 +249,16 @@ class NavBar extends React.Component {
             </List>
           </Drawer>
           <main id='main' className={classes.content}>
-            <div className={classes.contentH} id='desktop'>
-              <Field/>
-            </div>
-
+            <div className={classes.appBarSpacer}/>
+            <Field style={{ gridColumn: '1/2', gridRow: '2/3' }}/>
+            <Grid className={classes.grid} container>
+              <Grid item xs={12}>
+                <Field/>
+              </Grid>
+              <Grid item xs={12}>
+                <p>Hi!</p>
+              </Grid>
+            </Grid>
           </main>
           <div className={classes.statusBar}>
             Hello! This is a super test blah blah blah
