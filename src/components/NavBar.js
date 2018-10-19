@@ -30,6 +30,7 @@ import PingTime from './PingTime'
 import Field from './Field'
 
 const drawerWidth = 200
+const toolbarHeight = 64
 
 const styles = theme => {
   return ({
@@ -52,7 +53,7 @@ const styles = theme => {
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '0 8px',
-      ...theme.mixins.toolbar,
+      height: toolbarHeight,
     },
     version: {
       flexGrow: 1,
@@ -103,7 +104,7 @@ const styles = theme => {
       },
     },
     appBarSpacer: {
-      ...theme.mixins.toolbar,
+      height: toolbarHeight,
       gridColumn: '1/3',
       gridRow: '1/2',
     },
@@ -113,13 +114,13 @@ const styles = theme => {
 //        r['height'] = `calc(100vh - ${v}px - 2rem)`
 //      }),
       display: 'grid',
-      gridTemplateColumns: 'min-content max-content',
-      gridTemplateRows: 'auto auto',
-      ...styleMapper(theme.mixins.toolbar, 'minHeight', (r, v) => {
-        r['gridTemplateRows'] = `${v}px auto`
+      gridTemplateColumns: 'min-content 1fr',
+      gridTemplateRows: `64px 1fr`,//`${toolbarHeight}px fr auto auto`,
+      //...styleMapper(theme.mixins.toolbar, 'minHeight', (r, v) => {
+      //  r['gridTemplateRows'] = `${v}px auto`
       //  r['maxHeight'] = `calc(100vh - ${v}px)`
       //  r['height'] = `calc(100vh - ${v}px)`
-      }),
+      //}),
       //gridTemplateRows: `${theme.mixins.toolbar.minHeight}px auto`,
       height: 'calc(100vh - 2rem)',
       maxHeight: 'calc(100vh - 2rem)',
@@ -251,14 +252,6 @@ class NavBar extends React.Component {
           <main id='main' className={classes.content}>
             <div className={classes.appBarSpacer}/>
             <Field style={{ gridColumn: '1/2', gridRow: '2/3' }}/>
-            <Grid className={classes.grid} container>
-              <Grid item xs={12}>
-                <Field/>
-              </Grid>
-              <Grid item xs={12}>
-                <p>Hi!</p>
-              </Grid>
-            </Grid>
           </main>
           <div className={classes.statusBar}>
             Hello! This is a super test blah blah blah

@@ -15,7 +15,7 @@ class PingTime extends React.Component {
     return (
       <div>
         <Typography variant='subtitle1' color={pingTime >= 0 ? 'inherit' : 'secondary'} classes={{ colorSecondary: classes.colorDisabled }}>
-          {pingTime >= 0 ? <p>{pingTime}ms&nbsp;&nbsp;&nbsp;&nbsp;</p> : <p>0ms&nbsp;&nbsp;&nbsp;&nbsp;</p>}
+          {pingTime >= 0 ? <p>{pingTime}ms</p> : <p>0ms</p>}
         </Typography>
       </div>
     )
