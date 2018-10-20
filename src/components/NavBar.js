@@ -28,6 +28,7 @@ import OpModeSelectorContainer from '../containers/OpModeSelectorContainer'
 import ConnectivityContainer from '../containers/ConnectivityContainer'
 import PingTime from './PingTime'
 import Field from './Field'
+import RealTimeChart from './RealTimeChart'
 
 const drawerWidth = 200
 const toolbarHeight = 64
@@ -99,9 +100,6 @@ const styles = theme => {
         duration: theme.transitions.duration.leavingScreen,
       }),
       width: theme.spacing.unit * 7,
-      [theme.breakpoints.up('sm')]: {
-        width: theme.spacing.unit * 9,
-      },
     },
     appBarSpacer: {
       height: toolbarHeight,
@@ -122,13 +120,25 @@ const styles = theme => {
       //  r['height'] = `calc(100vh - ${v}px)`
       //}),
       //gridTemplateRows: `${theme.mixins.toolbar.minHeight}px auto`,
-      height: 'calc(100vh - 2rem)',
-      maxHeight: 'calc(100vh - 2rem)',
+      height: 'calc(100vh - 64px)',
+      maxHeight: 'calc(100vh - 64px)',
       //gridGap: theme.spacing.unit * 3,
       //padding: theme.spacing.unit * 3,
-      minWidth: '100%',
+      width: `calc(100vw - ${theme.spacing.unit * 7}px)`,
       //  border: '4px solid black',
       //height: '100%',
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+
+    },
+    contentOpen: {
+      width: `calc(100vw - ${drawerWidth}px)`,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
     },
     drawerHeadingSpacer: {
       width: '24px',
@@ -169,8 +179,9 @@ width: '100%',
     grid: {
       gridRow: '2/3',
       gridColumn: '2/3',
-      height: '100%',
-      width: '100%',
+      width: 'auto',
+    //  height: '100%',
+    //  width: '100%',
     }
   })
 }
@@ -249,13 +260,28 @@ class NavBar extends React.Component {
               </div>
             </List>
           </Drawer>
-          <main id='main' className={classes.content}>
+          <main id='main' className={classNames(classes.content, this.state.open && classes.contentOpen)}>
             <div className={classes.appBarSpacer}/>
             <Field style={{ gridColumn: '1/2', gridRow: '2/3' }}/>
+            <Grid className={classes.grid} container>
+              <Grid item xs={12}>
+                <div>
+                  <RealTimeChart data={{ labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+  series: [
+    [5, 5, 10, 8, 7, 5, 4, null, null, null, 10, 10, 7, 8, 6, 9],
+    [10, 15, null, 12, null, 10, 12, 15, null, null, 12, null, 14, null, null, null],
+    [null, null, null, null, 3, 4, 1, 3, 4,  6,  7,  9, 5, null, null, null],
+    [{x:3, y: 3},{x: 4, y: 3}, {x: 5, y: undefined}, {x: 6, y: 4}, {x: 7, y: null}, {x: 8, y: 4}, {x: 9, y: 4}]
+  ]}}/>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <div>
+                  <Field debug/>
+                </div>
+              </Grid>
+            </Grid>
           </main>
-          <div className={classes.statusBar}>
-            Hello! This is a super test blah blah blah
-          </div>
         </div>
       </React.Fragment>
     )

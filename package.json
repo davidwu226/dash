@@ -5,8 +5,10 @@
   "dependencies": {
     "@material-ui/core": "^3.2.0",
     "@material-ui/icons": "^3.0.1",
+    "chartist": "^0.11.0",
     "lodash": "^4.17.11",
     "react": "^16.5.2",
+    "react-chartist": "^0.13.1",
     "react-dom": "^16.5.2",
     "react-redux": "^5.0.7",
     "react-responsive-canvas": "^1.0.2",
