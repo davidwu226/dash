@@ -4,8 +4,8 @@ import Connectivity from '../components/Connectivity'
 
 class ConnectivityContainer extends React.Component {
   render() {
-    const { connected } = this.props
-    return <Connectivity connected={connected}/>
+    const { connected, ...others } = this.props
+    return <Connectivity connected={connected} {...others} />
   }
 }
 

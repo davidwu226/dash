@@ -4,6 +4,7 @@ import { Card } from '@material-ui/core/'
 import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import FieldCanvas from './FieldCanvas'
+import { registerCallback } from '../util/resizeEvent'
 
 const DIMENSIONS = 1286
 
@@ -17,7 +18,6 @@ function getDimensions(element) {
 const styles = theme => {
   return ({
     root: {
-      overflow: 'hidden',
     },
     canvas: {
       //position: 'absolute'
@@ -44,7 +44,11 @@ class Field extends React.Component {
     }
     this.resize()
 
-    window.addEventListener('resize', () => {
+    this.div.addEventListener('resize', () => {
+      this.resize()
+    })
+
+    registerCallback(() => {
       this.resize()
     })
   }
@@ -64,40 +68,14 @@ class Field extends React.Component {
   }
 
   resize() {
-    let main = this.div
-    while (main && main.id !== 'main') {
-      main = main.parentNode
-    }
-    if (main !== this.div.parentNode) {
-      const field = main.children.item(1)
-      const { width: pw, height: ph } = getDimensions(main)
-      const { width: dw, height: dh } = getDimensions(this.div)
-      const { width: fw, height: fh } = getDimensions(field)
-
-      const ps = Math.min(Math.min(pw-fw, ph/2))
-      if (this.canvas) {
-        this.canvas.width = ps
-        this.canvas.height = ps
-      }
-      if (this.props.debug) {
-        console.log(`xresize: ${ps} ${dw}x${dh} ${pw}x${ph} ${fw}x${fh}`)
-      }
-      this.componentWillReceiveProps({ width: ps, height: ps })
-      return
-    }
-
     const { width: dw, height: dh } = getDimensions(this.div)
-    const { width: pw, height: ph } = getDimensions(main)
-
-    const ps = Math.min(Math.min(pw, dh), ph)
+    const s = Math.min(dw, dh)
     if (this.canvas) {
-      this.canvas.width = ps
-      this.canvas.height = ps
+      this.canvas.width = s
+      this.canvas.height = s
     }
-    if (this.props.debug) {
-      console.log(`resize: ${main.id} ${ps} ${dw}x${dh} ${pw}x${ph}`)
-    }
-    this.componentWillReceiveProps({ width: ps, height: ps })
+    console.log(`resizing with ${s} ${dw}x${dh}`)
+    this.componentWillReceiveProps({ width: s, height: s })
     return
   }
 
@@ -110,17 +88,17 @@ class Field extends React.Component {
   }
 
   render() {
-    const { classes, classnames, ...other } = this.props
+    const { classes, className, style, key, ...other } = this.props
     const { width, height } = this.state
 
     return (
-      <div className={classNames(classNames, classes.root)} ref={(c) => { this.div = c }} {...other} >
-        {!this.props.debug && <canvas className={classes.canvas} ref={(c) => { this.canvas = c }} width={width} height={height} onClick={()=>{this.setState({width: '100', height: '100'})}} />}
-        {this.props.debug && <canvas className={classes.canvas} ref={(c) => { this.canvas = c }} width={width} height={height} onClick={()=>{this.setState({width: '100', height: '100'})}} /*style={{ position: 'absolute', top: '150px', left: '150px' }} *//>}
+      <div className={className} style={{ display: 'block', width: '100%', height: '100%' }}>
+        <div className={classes.root} ref={(c) => { this.div = c }} style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <canvas className={classes.canvas} ref={(c) => { this.canvas = c }} width={width} height={height} style={{ position: 'absolute', top: '0', left: '0' }} />
+        </div>
       </div>
     )
   }
 }
-
 
 export default connect()(withStyles(styles)(Field))

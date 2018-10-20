@@ -5,8 +5,8 @@ import OpModeSelector from '../components/OpModeSelector'
 
 class OpModeSelectorContainer extends React.Component {
   render() {
-    const { opMode, opModes } = this.props
-    return <OpModeSelector opMode={opMode} opModes={opModes} onChange={(opMode) => this.props.selectOpMode(opMode)}/>
+    const { opMode, opModes, ...others } = this.props
+    return <OpModeSelector opMode={opMode} opModes={opModes} onChange={(opMode) => this.props.selectOpMode(opMode)} {...others} />
   }
 }
 

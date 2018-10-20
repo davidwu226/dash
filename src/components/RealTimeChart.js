@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import ChartistGraph from 'react-chartist'
 import Chartist from 'chartist'
+import { registerCallback } from '../util/resizeEvent'
 
 const styles = theme => {
   return ({
@@ -14,13 +15,26 @@ const styles = theme => {
 class RealTimeChart extends React.Component {
   state = { data: {} }
 
+  constructor(props) {
+    super(props)
+    this.chartist = React.createRef()
+  }
+
   componentWillReceiveProps(nextProps) {
-    console.log(`recv ${nextProps}`)
     this.setState({
       ...this.state,
       ...nextProps,
     })
   }
+
+  componentDidMount() {
+    registerCallback(()=>{
+      if (this.chartist.current) {
+        this.chartist.current.chartist.update()
+      }
+    })
+  }
+
   render() {
     const { classes, classnames, data, ...other } = this.props
     const options = {
@@ -31,13 +45,23 @@ class RealTimeChart extends React.Component {
       lineSmooth: Chartist.Interpolation.cardinal({
         fillHoles: true,
       }),
-      low: 0
+      low: 0,
+      axisX: {
+        type: Chartist.FixedScaleAxis,
+        divisor: 4,
+        onlyInteger: true,
+      }
     }
 
-    console.log(JSON.stringify(this.props))
     return (
       <div className={classNames(classNames, classes.root)} ref={(c) => { this.div = c }} {...other} >
-        <ChartistGraph data={data} options={options} type={'Line'} style={{ height: '100%' }}/>
+        <ChartistGraph
+          ref={this.chartist}
+          data={data}
+          options={options}
+          type={'Line'}
+          style={{ flex: '1 1 auto'}}
+        />
       </div>
     )
   }

@@ -23,12 +23,17 @@ import PlayIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import StopIcon from '@material-ui/icons/Stop'
 import RestartIcon from '@material-ui/icons/Replay'
+import SplitPane from 'react-split-pane'
+
+import './Resizer.css'
+
 import styleMapper from '../util/styleMapper'
 import OpModeSelectorContainer from '../containers/OpModeSelectorContainer'
 import ConnectivityContainer from '../containers/ConnectivityContainer'
 import PingTime from './PingTime'
 import Field from './Field'
-import RealTimeChart from './RealTimeChart'
+import RealTimeChartContainer from '../containers/RealTimeChartContainer'
+import { triggerCallbacks } from '../util/resizeEvent'
 
 const drawerWidth = 200
 const toolbarHeight = 64
@@ -37,7 +42,7 @@ const styles = theme => {
   return ({
     root: {
       display: 'flex',
-      flexWrap: 'overflow',
+      flexWrap: 'nowrap',
     },
     growFixed: {
       flexGrow: 1,
@@ -112,7 +117,7 @@ const styles = theme => {
 //        r['height'] = `calc(100vh - ${v}px - 2rem)`
 //      }),
       display: 'grid',
-      gridTemplateColumns: 'min-content 1fr',
+      gridTemplateColumns: '1fr 1fr',
       gridTemplateRows: `64px 1fr`,//`${toolbarHeight}px fr auto auto`,
       //...styleMapper(theme.mixins.toolbar, 'minHeight', (r, v) => {
       //  r['gridTemplateRows'] = `${v}px auto`
@@ -134,6 +139,39 @@ const styles = theme => {
 
     },
     contentOpen: {
+      width: `calc(100vw - ${theme.spacing.unit * 7}px)`,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    main: {
+      position: 'relative',
+      height: 'calc(100vh - 64px)',
+      maxHeight: 'calc(100vh - 64px)',
+      width: `calc(100vw - ${theme.spacing.unit * 7}px)`,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    mainOpen: {
+      width: `calc(100vw - ${drawerWidth}px)`,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    gridLayout: {
+      height: 'calc(100vh - 64px)',
+      maxHeight: 'calc(100vh - 64px)',
+      width: `calc(100vw - ${theme.spacing.unit * 7}px)`,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    gridLayoutOpen: {
       width: `calc(100vw - ${drawerWidth}px)`,
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
@@ -155,6 +193,8 @@ width: '100%',
     },
     border: {
       border: '4px solid black',
+      width: '100%',
+      height: '100%',
     },
     borderBox: {
       flex: '1 1 auto',
@@ -180,8 +220,12 @@ width: '100%',
       gridRow: '2/3',
       gridColumn: '2/3',
       width: 'auto',
-    //  height: '100%',
-    //  width: '100%',
+      //  height: '100%',
+      //  width: '100%',
+    },
+    appBarSkip: {
+      height: toolbarHeight,
+      width: '100%',
     }
   })
 }
@@ -260,27 +304,15 @@ class NavBar extends React.Component {
               </div>
             </List>
           </Drawer>
-          <main id='main' className={classNames(classes.content, this.state.open && classes.contentOpen)}>
-            <div className={classes.appBarSpacer}/>
-            <Field style={{ gridColumn: '1/2', gridRow: '2/3' }}/>
-            <Grid className={classes.grid} container>
-              <Grid item xs={12}>
-                <div>
-                  <RealTimeChart data={{ labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-  series: [
-    [5, 5, 10, 8, 7, 5, 4, null, null, null, 10, 10, 7, 8, 6, 9],
-    [10, 15, null, 12, null, 10, 12, 15, null, null, 12, null, 14, null, null, null],
-    [null, null, null, null, 3, 4, 1, 3, 4,  6,  7,  9, 5, null, null, null],
-    [{x:3, y: 3},{x: 4, y: 3}, {x: 5, y: undefined}, {x: 6, y: 4}, {x: 7, y: null}, {x: 8, y: 4}, {x: 9, y: 4}]
-  ]}}/>
-                </div>
-              </Grid>
-              <Grid item xs={12}>
-                <div>
-                  <Field debug/>
-                </div>
-              </Grid>
-            </Grid>
+          <main className={classes.main}>
+            <div className={classes.appBarSkip}/>
+            <SplitPane onChange={()=>triggerCallbacks()} split="vertical" minSize={50} defaultSize={'70%'} className={classNames(classes.gridLayout, this.state.open && classes.gridLayoutOpen)}>
+              <Field/>
+              <SplitPane onChange={()=>triggerCallbacks()} defaultSize={'50%'} split="horizontal">
+                <RealTimeChartContainer style={{ flex: '1 1 auto', display: 'flex' }}/>
+                <Field/>
+              </SplitPane>
+            </SplitPane>
           </main>
         </div>
       </React.Fragment>
