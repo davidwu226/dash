@@ -6,19 +6,20 @@ import { addGraph } from '../state/Graph'
 
 class RealTimeChartContainer extends React.Component {
   render() {
-    const { data, className, classes, style } = this.props
-    return <RealTimeChart data={data} className={className} classes={classes} style={style} />
+    const { data, startTime, className, classes, style } = this.props
+    return <RealTimeChart data={data} startTime={startTime} className={className} classes={classes} style={style} />
   }
 }
 
 function mapStateToProps(state) {
-  const series = _.map(state.Graph,
+  const series = _.map(state.Graph.graphs,
     (color, name) => _.map(state.Telemetry.telemetry[name],
-      (d) => ({ x: d.time, y: d.value })).slice(-10))
+      (d) => ({ x: d.time, y: d.value }))/*.slice(-10)*/)
   return {
     data: {
       series,
-    }
+    },
+    startTime: state.Graph.startTime,
   }
 }
 

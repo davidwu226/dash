@@ -42,22 +42,45 @@ class TelemetryTable extends React.Component {
 
   render() {
     const { classes, telemetry, style } = this.props
+
+    // Copied from Chartist's settings.
+    const colors = [
+      '#d70206',
+      '#f05b4f',
+      '#f4c63d',
+      '#d17905',
+      '#453d3f',
+      '#59922b',
+      '#0544d3',
+      '#6b0392',
+      '#f05b4f',
+      '#dda458',
+      '#eacf7d',
+      '#86797d',
+      '#b2c326',
+      '#6188e2',
+      '#a748ca',
+    ]
+
     return (
       <React.Fragment>
         <div className={classes.wrapper}>
           <Table className={classes.root} style={style}>
             <TableBody>
               {_.map(telemetry, (value, key) => {
+                const tstyle =  ((this.state.selected[key]) && { color: colors.shift() }) || {}
                 return (
                   <TableRow key={key} role='checkbox' selected={this.state.selected[key]} onClick={event => this.handleClick(event, key)}>
-                    <TableCell padding='checkbox'>
+                    <TableCell padding='checkbox' width='64px'>
                       <Checkbox checked={this.state.selected[key] === true}/>
                     </TableCell>
-                    <TableCell component='th' scope='row' padding='none'>
+                    <TableCell width='30%' style={tstyle} component='th' scope='row' padding='none'>
                       {key}
                     </TableCell>
-                    <TableCell numeric>
+                    <TableCell>
                       {value.value}
+                    </TableCell>
+                    <TableCell width='20%'>
                     </TableCell>
                   </TableRow>
                 )
