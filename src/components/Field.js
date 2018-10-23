@@ -74,7 +74,6 @@ class Field extends React.Component {
       this.canvas.width = s
       this.canvas.height = s
     }
-    console.log(`resizing with ${s} ${dw}x${dh}`)
     this.componentWillReceiveProps({ width: s, height: s })
     return
   }

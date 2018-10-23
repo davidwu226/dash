@@ -43,7 +43,7 @@ class OpModeSelector extends React.Component {
       <div>
         <FormControl className={classes.root}>
           <InputLabel FormLabelClasses={{ root: classes.inputLabel, focused: classes.inputLabelFocused }}>OpMode</InputLabel>
-          <Select value={opMode} className={classes.select} inputProps={{ classes: { icon: classes.icon } }} autoWidth={true} onChange={(e)=>{onChange(e.target.value)}}>
+          <Select value={opMode || ''} className={classes.select} inputProps={{ classes: { icon: classes.icon } }} autoWidth={true} onChange={(e)=>{onChange(e.target.value)}}>
             {opModes.map(o => (
               <MenuItem value={o} key={o}>{o}</MenuItem>
             ))}

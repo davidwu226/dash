@@ -2,43 +2,29 @@ import _ from 'lodash'
 import React from 'react'
 import { connect } from 'react-redux'
 import RealTimeChart from '../components/RealTimeChart'
-import { addData } from '../state/RealTimeData'
+import { addGraph } from '../state/Graph'
 
 class RealTimeChartContainer extends React.Component {
-  componentDidMount() {
-    let c = 0
-    setInterval(() => {
-      this.props.addData({ time: ++c, value: Math.floor(Math.random()*300) })
-      this.props.addData({ time: ++c, value: Math.floor(Math.random()*300) })
-      this.props.addData({ time: ++c, value: Math.floor(Math.random()*300) })
-      this.props.addData({ time: ++c, value: Math.floor(Math.random()*300) })
-      this.props.addData({ time: ++c, value: Math.floor(Math.random()*300) })
-    }, 100)
-  }
-
   render() {
-    const { data, ...others } = this.props
-    return <RealTimeChart data={data} {...others} />
+    const { data, className, classes, style } = this.props
+    return <RealTimeChart data={data} className={className} classes={classes} style={style} />
   }
 }
 
 function mapStateToProps(state) {
-  const data = _.map(state.RealTimeData.data, (d) => {
-    return {
-      x: d.time,
-      y: d.value,
-    }
-  }).slice(-10)
+  const series = _.map(state.Graph,
+    (color, name) => _.map(state.Telemetry.telemetry[name],
+      (d) => ({ x: d.time, y: d.value })).slice(-10))
   return {
     data: {
-      series: [data],
+      series,
     }
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    addData: data => dispatch(addData(data)),
+    addGraph: data => dispatch(addGraph(data)),
   }
 }
 

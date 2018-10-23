@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
+import moment from 'moment'
 import { withStyles } from '@material-ui/core/styles'
 import ChartistGraph from 'react-chartist'
 import Chartist from 'chartist'
@@ -13,18 +14,9 @@ const styles = theme => {
 }
 
 class RealTimeChart extends React.Component {
-  state = { data: {} }
-
   constructor(props) {
     super(props)
     this.chartist = React.createRef()
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      ...this.state,
-      ...nextProps,
-    })
   }
 
   componentDidMount() {
@@ -36,7 +28,7 @@ class RealTimeChart extends React.Component {
   }
 
   render() {
-    const { classes, classnames, data, ...other } = this.props
+    const { classes, className, data, style } = this.props
     const options = {
       fullWidth: true,
       chartPadding: {
@@ -50,11 +42,14 @@ class RealTimeChart extends React.Component {
         type: Chartist.FixedScaleAxis,
         divisor: 4,
         onlyInteger: true,
+        labelInterpolationFnc: function(value) {
+          return moment(value).fromNow();
+        }
       }
     }
 
     return (
-      <div className={classNames(classNames, classes.root)} ref={(c) => { this.div = c }} {...other} >
+      <div className={classNames(className, classes.root)} ref={(c) => { this.div = c }} classes={classes} style={style}>
         <ChartistGraph
           ref={this.chartist}
           data={data}

@@ -32,7 +32,9 @@ import OpModeSelectorContainer from '../containers/OpModeSelectorContainer'
 import ConnectivityContainer from '../containers/ConnectivityContainer'
 import PingTime from './PingTime'
 import Field from './Field'
+import NotificationContainer from '../containers/NotificationContainer'
 import RealTimeChartContainer from '../containers/RealTimeChartContainer'
+import TelemetryTableContainer from '../containers/TelemetryTableContainer'
 import { triggerCallbacks } from '../util/resizeEvent'
 
 const drawerWidth = 200
@@ -260,6 +262,7 @@ class NavBar extends React.Component {
               <div className={classes.growFixed}/>
               <OpModeSelectorContainer/>
               <div className={classes.grow}/>
+              <NotificationContainer/>
               <PingTime pingTime={10}/>
               <ConnectivityContainer/>
             </Toolbar>
@@ -310,7 +313,7 @@ class NavBar extends React.Component {
               <Field/>
               <SplitPane onChange={()=>triggerCallbacks()} defaultSize={'50%'} split="horizontal">
                 <RealTimeChartContainer style={{ flex: '1 1 auto', display: 'flex' }}/>
-                <Field/>
+                <TelemetryTableContainer/>
               </SplitPane>
             </SplitPane>
           </main>
